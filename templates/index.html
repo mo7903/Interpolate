@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Interpolate - Interpolation Calculator
+{% endblock %}
+
+{% block content %}
+    <!-- Jumbotron -->
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Interpolation Calculator</h1>
+            <p class="lead">Welcome to Interpolate, a website that helps you interpolate functions using various methods including Newton's forward and backward interpolation, Everett's interpolation, and PCHIP interpolation.</p>
+            <hr class="my-4">
+            <a class="btn btn-primary btn-lg" href="#calculator" role="button">Get Started</a>
+        </div>
+    </div>
+    
+    <!-- Calculator -->
+    <section id="calculator" class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form action="/results" method="POST">
+                    <div class="mb-3">
+                        <label for="X_values" class="form-label">X Values (separate with comma)</label>
+                        <input type="text" class="form-control" id="X" name="X" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Y_values" class="form-label">Y Values (separate with comma)</label>
+                        <input type="text" class="form-control" id="Y" name="Y" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="targets" class="form-label">Targets (separate with comma)</label>
+                        <input type="text" class="form-control" id="targets" name="targets" required>
+                    </div>
+                    <div class="d-grid">
+                        <button class="btn btn-primary" type="submit">Calculate</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}
