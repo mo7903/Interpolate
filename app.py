@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request
-import matplotlib.pyplot as plt
 from methods import *
 from scipy.interpolate import pchip_interpolate
-from multiprocessing import Process, Queue
 from plotter import Plotter
 
 app = Flask(__name__)
@@ -47,12 +45,25 @@ def graph():
         Y_pchip = [pchip_interpolate(X, Y, x) for x in targets]
         Y_everett = [everett_interpolation(X, Y, x) for x in targets]
 
-        plt = Plotter(X, Y, targets, Y_newton_forward, "Newton Forward")
-        plt.plot()
+        # Generate the plots using bokeh
+        plots = []
+        p1 = Plotter(X, Y, targets, Y_everett, title="Everett Function")
+        plots.append(p1.plot())
+        p2 = Plotter(X, Y, targets, Y_newton_forward, title="Newton Forward Interpolation")
+        plots.append(p2.plot())
+        p3 = Plotter(X, Y, targets, Y_newton_backward, title="Newton Backward Interpolation")
+        plots.append(p3.plot())
+        p4 = Plotter(X, Y, targets, Y_pchip, title="PCHIP Interpolation")
+        plots.append(p4.plot())
 
-        return render_template("graph_result.html")
+        # Render the graph_results.html template with the list of plot srcs
+        return render_template("graph_results.html", plots=plots)
     else:
         return render_template("graph.html")
+
+@app.route("/template/<path>")
+def template(path):
+    return render_template("/graphs/" + path)
 
 
 if __name__ == '__main__':
