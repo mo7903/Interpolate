@@ -5,7 +5,7 @@
 To get started with this project, follow the steps below:
 
 1. Clone this repository to your local machine.
-2. Install the required dependencies using  (```pip install -r requirements.txt``).
+2. Install the required dependencies using  (`pip install -r requirements.txt`).
 3. Run the Flask application using python app.py or flask run.
 4. Open a web browser and navigate to http://localhost:5000/.
 
