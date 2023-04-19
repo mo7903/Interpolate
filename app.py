@@ -20,7 +20,6 @@ def result():
     Y_pchip = [pchip_interpolate(X, Y, x) for x in targets]
     Y_everett = [everett_interpolation(X, Y, x) for x in targets]
 
-
     return render_template('results.html', targets=targets, n=len(targets), forward=Y_newton_forward, backward=Y_newton_backward, everett=Y_everett, pchip=Y_pchip)
 
 @app.route("/graph", methods=["GET", "POST"])
