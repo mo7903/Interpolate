@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block title %}Graph Results{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Graph Results</h1>
+    <p>Below are the graphs for the interpolated functions:</p>
+    <div class="row">
+        {% for img_file in plots %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ img_file.split("/")[-1][:-5] }}</h5>
+                    <a href="{{ url_for('template', path=img_file.split('/')[-1]) }}" target="_blank" class="btn btn-primary">View Graph</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
