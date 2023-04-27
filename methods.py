@@ -1,5 +1,5 @@
 import numpy as np
-
+from decimal import Decimal
 np.set_printoptions(suppress=True)
 
 def forward_difference(x, y):
@@ -86,7 +86,6 @@ def newton_backward(X, Y):
         return result
     return f
 
-import numpy as np
 
 def everett_interpolation(X, Y, x_):
     """
@@ -133,59 +132,34 @@ def everett_interpolation(X, Y, x_):
     return y_
 
 
-def sterling_interpolation(X, Y):
-    # Define the forward difference function
-    def forward_difference(x, y):
-        n = len(x)
-        coeff = np.zeros((n, n))
-        coeff[:, 0] = y
 
-        for j in range(1, n):
-            for i in range(n - j):
-                coeff[i][j] = coeff[i + 1][j - 1] - coeff[i][j - 1]
 
-        return coeff
+from decimal import Decimal
 
-    # Define the interpolation function
-    def f(x_):
-        n = len(X)
-        h = np.diff(X)[0]
+def stirling_interpolation(X, Y, x):
+    n = len(X)
+    h = X[1] - X[0]
+    s = n // 2
+    a = X[s]
+    u = Decimal(x - a) / Decimal(h)
 
-        # Check that all points are evenly spaced
-        assert all(np.isclose(np.diff(X), h))
+    # Preparing the forward difference table
+    delta = [[0 for i in range(n)] for j in range(n)]
+    for i in range(n):
+        delta[i][0] = Decimal(Y[i])
+    for i in range(1, n):
+        for j in range(n - i):
+            delta[j][i] = delta[j+1][i-1] - delta[j][i-1]
 
-        # Calculate the value of x relative to the last point
-        x_rel = x_ - X[-1]
-
-        # Calculate the value of delta_x
-        delta_x = X[1] - X[0]
-
-        # Calculate the value of p
-        p = x_rel / delta_x
-
-        # Calculate the forward difference table
-        forward_diff_table = forward_difference(X, Y)
-
-        # Initialize the result
-        result = Y[-1]
-
-        # Loop over the terms
-        for i in range(1, n):
-            # Initialize the numerator and denominator of the coefficient
-            num = 1
-            den = 1
-
-            # Loop over the values of k
-            for k in range(i):
-                num *= (p - k)
-                den *= (i - k)
-
-            # Calculate the coefficient
-            coeff = num / den
-
-            # Add the term to the result
-            result += coeff * forward_diff_table[-i - 1, i - 1]
-
-        return result
-
-    return f
+    # Calculating f(x) using the Stirling formula
+    y = delta[s][0]
+    temp_u = Decimal(u)
+    temp = Decimal(1)
+    for i in range(1, n):
+        if i % 2 == 0:
+            temp_u *= (u ** 2 - Decimal(i) ** 2 + Decimal(i))
+        else:
+            temp_u *= (u ** 2 - Decimal(i) ** 2)
+        temp *= (Decimal(i) ** 2 - Decimal(1)) if i != 1 else Decimal(1)
+        y += delta[s - i // 2][i] * temp_u / temp
+    return float(y)
