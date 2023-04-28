@@ -1,4 +1,4 @@
-import numpy as np
+import math, numpy as np
 from decimal import Decimal
 np.set_printoptions(suppress=True)
 
@@ -99,6 +99,11 @@ def everett_interpolation(X, Y, x_):
     rtype : float
     """
     n = len(X)
+
+    if n % 2:
+        X.pop()
+        Y.pop()
+        n -= 1
     h = X[1] - X[0]
 
     # Create a table of differences for each order
@@ -131,35 +136,47 @@ def everett_interpolation(X, Y, x_):
 
     return y_
 
-
-
-
-from decimal import Decimal
-
-def stirling_interpolation(X, Y, x):
+def stirling_interpolation(X, Y, x_):
+    y_ = 0; d = 1; 
     n = len(X)
-    h = X[1] - X[0]
-    s = n // 2
-    a = X[s]
-    u = Decimal(x - a) / Decimal(h)
+    temp1 = 1; temp2 = 1
+    k = 1; l = 1
+    delta = [[0 for i in range(n)]
+                for j in range(n)]
 
-    # Preparing the forward difference table
-    delta = [[0 for i in range(n)] for j in range(n)]
-    for i in range(n):
-        delta[i][0] = Decimal(Y[i])
-    for i in range(1, n):
-        for j in range(n - i):
-            delta[j][i] = delta[j+1][i-1] - delta[j][i-1]
+    h = X[1] - X[0]
+    s = math.floor(n / 2)
+    a = X[s]
+    u = (x_ - a) / h
+
+    # Preparing the forward difference
+    # table
+    for i in range(n - 1):
+        delta[i][0] = Y[i + 1] - Y[i]
+    for i in range(1, n - 1):
+        for j in range(n - i - 1):
+            delta[j][i] = (delta[j + 1][i - 1] -
+                           delta[j][i - 1])
 
     # Calculating f(x) using the Stirling formula
-    y = delta[s][0]
-    temp_u = Decimal(u)
-    temp = Decimal(1)
+    y_ = Y[s]
+
     for i in range(1, n):
-        if i % 2 == 0:
-            temp_u *= (u ** 2 - Decimal(i) ** 2 + Decimal(i))
+        if (i % 2 != 0):
+            if (k != 2):
+                temp1 *= (pow(u, k) - pow((k - 1), 2))
+            else:
+                temp1 *= (pow(u, 2) - pow((k - 1), 2))
+            k += 1
+            d *= i
+            s = math.floor((n - i) / 2)
+            y_ += (temp1 / (2 * d)) * (delta[s][i - 1] +
+                                       delta[s - 1][i - 1])
         else:
-            temp_u *= (u ** 2 - Decimal(i) ** 2)
-        temp *= (Decimal(i) ** 2 - Decimal(1)) if i != 1 else Decimal(1)
-        y += delta[s - i // 2][i] * temp_u / temp
-    return float(y)
+            temp2 *= (pow(u, 2) - pow((l - 1), 2))
+            l += 1
+            d *= i
+            s = math.floor((n - i) / 2)
+            y_ += (temp2 / (d)) * (delta[s][i - 1])
+
+    return y_
