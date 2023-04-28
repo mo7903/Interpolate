@@ -2,7 +2,7 @@ import os
 from bokeh.plotting import figure, output_file, save
 
 # Define a directory to save the images
-IMG_DIR = "./templates/graphs"
+IMG_DIR = "./templates"
 
 class Plotter():
 

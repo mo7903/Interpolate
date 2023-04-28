@@ -61,7 +61,7 @@ def graph():
 
 @app.route("/template/<path>")
 def template(path):
-    return render_template("/graphs/" + path)
+    return render_template(path)
 
 
 if __name__ == '__main__':
