@@ -1,5 +1,5 @@
-import numpy as np
-
+import math, numpy as np
+from decimal import Decimal
 np.set_printoptions(suppress=True)
 
 def forward_difference(x, y):
@@ -86,7 +86,6 @@ def newton_backward(X, Y):
         return result
     return f
 
-import numpy as np
 
 def everett_interpolation(X, Y, x_):
     """
@@ -100,6 +99,11 @@ def everett_interpolation(X, Y, x_):
     rtype : float
     """
     n = len(X)
+
+    if n % 2:
+        X.pop()
+        Y.pop()
+        n -= 1
     h = X[1] - X[0]
 
     # Create a table of differences for each order
@@ -132,60 +136,47 @@ def everett_interpolation(X, Y, x_):
 
     return y_
 
+def stirling_interpolation(X, Y, x_):
+    y_ = 0; d = 1; 
+    n = len(X)
+    temp1 = 1; temp2 = 1
+    k = 1; l = 1
+    delta = [[0 for i in range(n)]
+                for j in range(n)]
 
-def sterling_interpolation(X, Y):
-    # Define the forward difference function
-    def forward_difference(x, y):
-        n = len(x)
-        coeff = np.zeros((n, n))
-        coeff[:, 0] = y
+    h = X[1] - X[0]
+    s = math.floor(n / 2)
+    a = X[s]
+    u = (x_ - a) / h
 
-        for j in range(1, n):
-            for i in range(n - j):
-                coeff[i][j] = coeff[i + 1][j - 1] - coeff[i][j - 1]
+    # Preparing the forward difference
+    # table
+    for i in range(n - 1):
+        delta[i][0] = Y[i + 1] - Y[i]
+    for i in range(1, n - 1):
+        for j in range(n - i - 1):
+            delta[j][i] = (delta[j + 1][i - 1] -
+                           delta[j][i - 1])
 
-        return coeff
+    # Calculating f(x) using the Stirling formula
+    y_ = Y[s]
 
-    # Define the interpolation function
-    def f(x_):
-        n = len(X)
-        h = np.diff(X)[0]
+    for i in range(1, n):
+        if (i % 2 != 0):
+            if (k != 2):
+                temp1 *= (pow(u, k) - pow((k - 1), 2))
+            else:
+                temp1 *= (pow(u, 2) - pow((k - 1), 2))
+            k += 1
+            d *= i
+            s = math.floor((n - i) / 2)
+            y_ += (temp1 / (2 * d)) * (delta[s][i - 1] +
+                                       delta[s - 1][i - 1])
+        else:
+            temp2 *= (pow(u, 2) - pow((l - 1), 2))
+            l += 1
+            d *= i
+            s = math.floor((n - i) / 2)
+            y_ += (temp2 / (d)) * (delta[s][i - 1])
 
-        # Check that all points are evenly spaced
-        assert all(np.isclose(np.diff(X), h))
-
-        # Calculate the value of x relative to the last point
-        x_rel = x_ - X[-1]
-
-        # Calculate the value of delta_x
-        delta_x = X[1] - X[0]
-
-        # Calculate the value of p
-        p = x_rel / delta_x
-
-        # Calculate the forward difference table
-        forward_diff_table = forward_difference(X, Y)
-
-        # Initialize the result
-        result = Y[-1]
-
-        # Loop over the terms
-        for i in range(1, n):
-            # Initialize the numerator and denominator of the coefficient
-            num = 1
-            den = 1
-
-            # Loop over the values of k
-            for k in range(i):
-                num *= (p - k)
-                den *= (i - k)
-
-            # Calculate the coefficient
-            coeff = num / den
-
-            # Add the term to the result
-            result += coeff * forward_diff_table[-i - 1, i - 1]
-
-        return result
-
-    return f
+    return y_

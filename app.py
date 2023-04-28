@@ -19,14 +19,16 @@ def result():
     Y_newton_backward = [newton_backward(X, Y)(x) for x in targets]
     Y_pchip = [pchip_interpolate(X, Y, x) for x in targets]
     Y_everett = [everett_interpolation(X, Y, x) for x in targets]
+    Y_stirling = [stirling_interpolation(X, Y, x) for x in targets]
 
-    return render_template('results.html', targets=targets, n=len(targets), forward=Y_newton_forward, backward=Y_newton_backward, everett=Y_everett, pchip=Y_pchip)
+
+    return render_template('results.html', targets=targets, n=len(targets), forward=Y_newton_forward, backward=Y_newton_backward, everett=Y_everett, pchip=Y_pchip, stirling=Y_stirling)
 
 @app.route("/graph", methods=["GET", "POST"])
 def graph():
     if request.method == "POST":
         # Define the function to be interpolated
-        f = lambda x: np.sin(x)
+        f = lambda x: x**2
         # Define the range of x values
         X = np.linspace(1, 10, 100)
 
@@ -34,7 +36,7 @@ def graph():
         Y = [f(x) for x in X]
         start = float(request.form["start"])
         end = float(request.form["end"])
-        targets = np.linspace(start, end, 50)
+        targets = np.linspace(start, end, 10)
 
         # Compute the values using the interpolation methods
         Y_true = [f(x) for x in targets]
@@ -42,6 +44,8 @@ def graph():
         Y_newton_backward = [newton_backward(X, Y)(x) for x in targets]
         Y_pchip = [pchip_interpolate(X, Y, x) for x in targets]
         Y_everett = [everett_interpolation(X, Y, x) for x in targets]
+        Y_stirling = [stirling_interpolation(X, Y, x) for x in targets]
+
 
         # Generate the plots using bokeh
         plots = []
@@ -53,6 +57,8 @@ def graph():
         plots.append(p3.plot())
         p4 = Plotter(X, Y, targets, Y_pchip, title="PCHIP Interpolation")
         plots.append(p4.plot())
+        p5 = Plotter(X, Y, targets, Y_stirling, title="Stirling Interpolation")
+        plots.append(p5.plot())
 
         # Render the graph_results.html template with the list of plot srcs
         return render_template("graph_results.html", plots=plots)
