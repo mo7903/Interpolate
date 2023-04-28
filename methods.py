@@ -1,5 +1,5 @@
 import math, numpy as np
-from decimal import Decimal
+
 np.set_printoptions(suppress=True)
 
 def forward_difference(x, y):
@@ -164,14 +164,14 @@ def stirling_interpolation(X, Y, x_):
     for i in range(1, n):
         if (i % 2 != 0):
             if (k != 2):
-                temp1 *= (pow(u, k) - pow((k - 1), 2))
+                temp1 *= u ** k - (k - 1) ** 2
             else:
-                temp1 *= (pow(u, 2) - pow((k - 1), 2))
+                temp1 *= u ** 2 - (k - 1) ** 2
             k += 1
             d *= i
             s = math.floor((n - i) / 2)
-            y_ += (temp1 / (2 * d)) * (delta[s][i - 1] +
-                                       delta[s - 1][i - 1])
+            y_ += (temp1 / (2 * d)) * (delta[s][i - 1] + delta[s - 1][i - 1])
+            
         else:
             temp2 *= (pow(u, 2) - pow((l - 1), 2))
             l += 1

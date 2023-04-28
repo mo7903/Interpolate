@@ -28,7 +28,7 @@ def result():
 def graph():
     if request.method == "POST":
         # Define the function to be interpolated
-        f = lambda x: x**2
+        f = lambda x: np.sin(x)
         # Define the range of x values
         X = np.linspace(1, 10, 100)
 

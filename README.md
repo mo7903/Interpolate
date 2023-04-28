@@ -13,7 +13,7 @@ To get started with this project, follow the steps below:
 This is a simple web application that allows users to plot and compare different interpolation methods for a given function or set of points.
 
 The available methods are:
-1.    True Function
+1.    Stirling Interpolation
 2.    Newton Forward Interpolation
 3.    Newton Backward Interpolation
 4.    PCHIP Interpolation
