@@ -1,4 +1,4 @@
-import math, numpy as np
+import numpy as np
 
 np.set_printoptions(suppress=True)
 
@@ -13,6 +13,16 @@ def forward_difference(x, y):
     return coeff
 
 def newton_forward(X, Y):
+    """
+    A function that performs Newton Forward interpolation for a given set of x and y values.
+
+    Params:
+    X : list of x values
+    Y : list of y values corresponding to the x values
+    x_ : x value at which the interpolation is to be performed
+
+    rtype : float
+    """
     def f(x_):
         n = len(X)
         h = np.diff(X)[0]
@@ -44,6 +54,16 @@ def newton_forward(X, Y):
     return f
 
 def newton_backward(X, Y):
+    """
+    A function that performs Newton Backward interpolation for a given set of x and y values.
+
+    Params:
+    X : list of x values
+    Y : list of y values corresponding to the x values
+    x_ : x value at which the interpolation is to be performed
+
+    rtype : float
+    """
     def backward_difference(x, y):
         n = len(x)
 
@@ -137,6 +157,16 @@ def everett_interpolation(X, Y, x_):
     return y_
 
 def stirling_interpolation(X, Y, x_):
+    """
+    A function that performs Stirling interpolation for a given set of x and y values.
+
+    Params:
+    X : list of x values
+    Y : list of y values corresponding to the x values
+    x_ : x value at which the interpolation is to be performed
+
+    rtype : float
+    """
     y_ = 0; d = 1; 
     n = len(X)
     temp1 = 1; temp2 = 1
@@ -148,8 +178,7 @@ def stirling_interpolation(X, Y, x_):
     a = X[n // 2]
     u = (x_ - a) / h
 
-    # Preparing the forward difference
-    # table
+    # Preparing the forward difference table
     for i in range(n - 1):
         delta[i][0] = Y[i + 1] - Y[i]
     for i in range(1, n - 1):
@@ -170,14 +199,14 @@ def stirling_interpolation(X, Y, x_):
                 temp1 -= (k - 1) ** 2
             k += 1
             d *= i
-            s = math.floor((n - i) / 2)
+            s = (n - i) // 2
             y_ += (temp1 / (2 * d)) * (delta[s][i - 1] + delta[s - 1][i - 1])
             
         else:
             temp2 *= (pow(u, 2) - pow((l - 1), 2))
             l += 1
             d *= i
-            s = math.floor((n - i) / 2)
+            s = (n - i) // 2
             y_ += (temp2 / (d)) * (delta[s][i - 1])
 
     return y_
