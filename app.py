@@ -18,9 +18,9 @@ def result():
     Y_newton_forward = [newton_forward(X, Y)(x) for x in targets]
     Y_newton_backward = [newton_backward(X, Y)(x) for x in targets]
     Y_pchip = [pchip_interpolate(X, Y, x) for x in targets]
-    Y_everett = [everett_interpolation(X, Y, x) for x in targets]
     Y_stirling = [stirling_interpolation(X, Y, x) for x in targets]
-
+    Y_everett = [everett_interpolation(X, Y, x) for x in targets]
+    
 
     return render_template('results.html', targets=targets, n=len(targets), forward=Y_newton_forward, backward=Y_newton_backward, everett=Y_everett, pchip=Y_pchip, stirling=Y_stirling)
 
@@ -36,24 +36,24 @@ def graph():
         Y = [f(x) for x in X]
         start = float(request.form["start"])
         end = float(request.form["end"])
-        targets = np.linspace(start, end, 10)
+        targets = np.linspace(start, end, 75)
 
         # Compute the values using the interpolation methods
         Y_true = [f(x) for x in targets]
         Y_newton_forward = [newton_forward(X, Y)(x) for x in targets]
         Y_newton_backward = [newton_backward(X, Y)(x) for x in targets]
         Y_pchip = [pchip_interpolate(X, Y, x) for x in targets]
-        Y_everett = [everett_interpolation(X, Y, x) for x in targets]
         Y_stirling = [stirling_interpolation(X, Y, x) for x in targets]
+        Y_everett = [everett_interpolation(X, Y, x) for x in targets]
 
 
         # Generate the plots using bokeh
         plots = []
         p1 = Plotter(X, Y, targets, Y_everett, title="Everett Function")
         plots.append(p1.plot())
-        p2 = Plotter(X, Y, targets, Y_newton_forward, title="Newton Forward Interpolation")
+        p2 = Plotter(X, Y, targets[:65], Y_newton_forward[:65], title="Newton Forward Interpolation")
         plots.append(p2.plot())
-        p3 = Plotter(X, Y, targets, Y_newton_backward, title="Newton Backward Interpolation")
+        p3 = Plotter(X, Y, targets[20:], Y_newton_backward[20:], title="Newton Backward Interpolation")
         plots.append(p3.plot())
         p4 = Plotter(X, Y, targets, Y_pchip, title="PCHIP Interpolation")
         plots.append(p4.plot())

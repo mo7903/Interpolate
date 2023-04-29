@@ -145,8 +145,7 @@ def stirling_interpolation(X, Y, x_):
                 for j in range(n)]
 
     h = X[1] - X[0]
-    s = math.floor(n / 2)
-    a = X[s]
+    a = X[n // 2]
     u = (x_ - a) / h
 
     # Preparing the forward difference
@@ -159,14 +158,16 @@ def stirling_interpolation(X, Y, x_):
                            delta[j][i - 1])
 
     # Calculating f(x) using the Stirling formula
-    y_ = Y[s]
+    y_ = Y[n // 2]
 
     for i in range(1, n):
         if (i % 2 != 0):
             if (k != 2):
-                temp1 *= u ** k - (k - 1) ** 2
+                temp1 = u ** k
+                temp1 -= - (k - 1) ** 2
             else:
-                temp1 *= u ** 2 - (k - 1) ** 2
+                temp1 = u ** 2
+                temp1 -= (k - 1) ** 2
             k += 1
             d *= i
             s = math.floor((n - i) / 2)

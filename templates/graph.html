@@ -5,6 +5,7 @@
 {% block content %}
 <div class="container">
     <h1>Interpolation Graphs</h1>
+    <p>Enter the start and end values for the range of points you want to plot:</p>
     <form method="post" action="">
         <div class="form-group">
             <label for="start">Start:</label>
@@ -16,5 +17,14 @@
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <hr>
+    <p>The following Interpolation methods are available:</p>
+    <ul>
+        <li>Newton Forward Interpolation</li>
+        <li>Newton Backward Interpolation</li>
+        <li>Everett Interpolation</li>
+        <li>Stirling Interpolation</li>
+        <li>PCHIP Interpolation</li>
+    </ul>
 </div>
 {% endblock %}
