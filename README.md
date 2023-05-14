@@ -20,3 +20,11 @@ The available methods are:
 5.    Everett Interpolation
 
 The plots are generated using the Bokeh library and are displayed on a results page. Clicking on a plot will open a new tab displaying the plot in more detail.
+
+## Additional Projects
+
+### 3D Spline Graphics
+This project builds on the spline interpolation techniques used in the Interpolation Plotter to create 3D graphics. The goal is to create smooth and realistic animations of 3D objects. The cubic spline interpolation method is used to create smooth curves and surfaces.
+
+### Network Traffic Data Interpolation
+This project demonstrates how spline interpolation can be used to fill in missing data in network traffic. The data is first smoothed using a moving average filter and then a cubic spline is fit to the smoothed data. The interpolated data is then plotted to visualize the original and interpolated data. This can improve the accuracy of prediction techniques that rely on network traffic data.
